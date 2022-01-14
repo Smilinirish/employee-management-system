@@ -1,0 +1,27 @@
+{
+  "name": "employee-management-system",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Smilinirish/employee-management-system.git"
+  },
+  "author": "Xander V",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Smilinirish/employee-management-system/issues"
+  },
+  "homepage": "https://github.com/Smilinirish/employee-management-system#readme",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "dotenv": "^11.0.0",
+    "express": "^4.17.2",
+    "inquirer": "^8.2.0",
+    "mysql2": "^2.3.3"
+  }
+}
