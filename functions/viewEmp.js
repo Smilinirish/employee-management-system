@@ -1,5 +1,17 @@
-const db = require('../server');
-
+const mysql = require("mysql2");
+const cTable = require("console.table");
+require("dotenv").config();
+const start = require('./start')
+const db = mysql.createConnection(
+  {
+    host: "localhost",
+    // MySQL username,
+    user: process.env.DB_USER,
+    // MySQL password
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+  },
+);
 function viewEmp() {
   // formatted table with employee info including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
   db.query(
@@ -14,13 +26,27 @@ function viewEmp() {
     LEFT JOIN department ON role.department_id = department.id
     LEFT JOIN employee manager ON employee.manager_id = manager.id;`,
     function (err, res) {
-      if (err)
-        throw err;
+      if (err) throw err;
 
       console.log(cTable.getTable(res));
-      start();
-    }
-  );
-}
+      inquirer
+      .prompt({
+        type: 'list',
+        message:'return to menu or exit',
+        choices:[
+          'yes',
+          'exit'
+        ],
+        name:'choice'
+      })
+      .then((data)=>{
+        switch (data.choice) {
+          case 'yes':
+            start();
+            break;
+        }
+      })
+  });
+};
 
 module.exports = viewEmp

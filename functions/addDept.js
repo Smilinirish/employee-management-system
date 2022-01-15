@@ -1,4 +1,19 @@
-const db = require('../server');
+const mysql = require("mysql2");
+const inquirer = require("inquirer");
+const cTable = require("console.table");
+require("dotenv").config();
+const viewDept = require("./viewDept");
+
+const db = mysql.createConnection(
+  {
+    host: "localhost",
+    // MySQL username,
+    user: process.env.DB_USER,
+    // MySQL password
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+  },
+);
 
 function addDept() {
   inquirer
@@ -13,8 +28,7 @@ function addDept() {
       const newName = answer.name;
       const sql = `INSERT INTO department (name) VALUES(?);`;
       db.query(sql, newName, function (err, res) {
-        if (err)
-          throw err;
+        if (err) throw err;
         console.log(cTable.getTable(res));
         viewDept();
       });

@@ -1,11 +1,22 @@
-const db = require('../server');
-
+const mysql = require("mysql2");
+const inquirer = require("inquirer");
+require("dotenv").config();
+const viewEmp = require("./viewEmp");
+const db = mysql.createConnection(
+  {
+    host: "localhost",
+    // MySQL username,
+    user: process.env.DB_USER,
+    // MySQL password
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+  },
+);
 function updateEmpRole() {
   // lets get employee from employee table
   const empSql = `SELECT * From employee`;
   db.query(empSql, (err, res) => {
-    if (err)
-      throw err;
+    if (err) throw err;
     const empUpdate = res.map(({ id, first_name, last_name }) => ({
       name: first_name + " " + last_name,
       value: id,
@@ -24,8 +35,7 @@ function updateEmpRole() {
         //lets grab the role of that employee we want to change it too
         const roleSql = `SELECT * FROM role`;
         db.query(roleSql, (err, res) => {
-          if (err)
-            throw err;
+          if (err) throw err;
           const roleUpdate = res.map(({ id, title }) => ({
             name: title,
             value: id,
@@ -46,8 +56,7 @@ function updateEmpRole() {
               const updateSql = `UPDATE employee SET role_id= ? WHERE id = ?`;
 
               db.query(updateSql, parameter, (err, res) => {
-                if (err)
-                  throw err;
+                if (err) throw err;
                 console.log("Employee has been updated!");
 
                 viewEmp();
@@ -56,6 +65,6 @@ function updateEmpRole() {
         });
       });
   });
-}
+};
 
 module.exports = updateEmpRole

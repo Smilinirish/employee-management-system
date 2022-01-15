@@ -1,11 +1,22 @@
-const db = require('../server');
-
+const mysql = require("mysql2");
+const inquirer = require("inquirer");
+require("dotenv").config();
+const viewRole = require("./viewRole");
+const db = mysql.createConnection(
+  {
+    host: "localhost",
+    // MySQL username,
+    user: process.env.DB_USER,
+    // MySQL password
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+  },
+);
 function addRole() {
   // query the department table to get all the info
   const sqlDept = `SELECT * FROM department;`;
   db.query(sqlDept, function (err, data) {
-    if (err)
-      throw err;
+    if (err) throw err;
     var myData = data.map(({ name, id }) => ({ name: name, value: id }));
     inquirer
       .prompt([
@@ -34,13 +45,12 @@ function addRole() {
         const sql = `INSERT INTO role(title, salary, department_id)
     VALUES(?, ?, ?)`;
         db.query(sql, parameters, function (err) {
-          if (err)
-            throw err;
+          if (err) throw err;
           console.log("Added " + roleTitle + " to Roles!");
           viewRole();
         });
       });
   });
-}
+};
 
 module.exports = addRole
