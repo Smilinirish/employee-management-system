@@ -1,19 +1,14 @@
 const mysql = require("mysql2");
 const cTable = require("console.table");
 require("dotenv").config();
-const start = require('./start')
-const db = mysql.createConnection(
-  {
-    host: "localhost",
-    // MySQL username,
-    user: process.env.DB_USER,
-    // MySQL password
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-  },
-);
+const start = require("./start");
+const db = mysql.createConnection({
+  host: "localhost",
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+});
 function viewEmp() {
-  // formatted table with employee info including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
   db.query(
     `SELECT employee.id,
     employee.first_name,
@@ -30,23 +25,21 @@ function viewEmp() {
 
       console.log(cTable.getTable(res));
       inquirer
-      .prompt({
-        type: 'list',
-        message:'return to menu or exit',
-        choices:[
-          'yes',
-          'exit'
-        ],
-        name:'choice'
-      })
-      .then((data)=>{
-        switch (data.choice) {
-          case 'yes':
-            start();
-            break;
-        }
-      })
-  });
-};
+        .prompt({
+          type: "list",
+          message: "return to menu or exit",
+          choices: ["yes", "exit"],
+          name: "choice",
+        })
+        .then((data) => {
+          switch (data.choice) {
+            case "yes":
+              start();
+              break;
+          }
+        });
+    }
+  );
+}
 
-module.exports = viewEmp
+module.exports = viewEmp;

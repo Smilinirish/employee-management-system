@@ -2,25 +2,17 @@ const mysql = require("mysql2");
 const inquirer = require("inquirer");
 require("dotenv").config();
 const viewEmp = require("./viewEmp");
-const db = mysql.createConnection(
-  {
-    host: "localhost",
-    // MySQL username,
-    user: process.env.DB_USER,
-    // MySQL password
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-  },
-);
+const db = mysql.createConnection({
+  host: "localhost",
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+});
 function addEmp() {
-  //let's grab the roles from role table
   const roleSql = `SELECT role.id, role.title FROM role`;
   db.query(roleSql, function (err, data) {
     if (err) throw err;
-    // console.log(data)
     const myRole = data.map(({ id, title }) => ({ name: title, value: id }));
-    // console.log(myRole)
-    //lets grab the manager first and last name from the employee table
     const managerSql = `SELECT * FROM employee`;
     db.query(managerSql, function (err, res) {
       if (err) throw err;
@@ -67,12 +59,11 @@ function addEmp() {
           db.query(sql, parameter, function (err, res) {
             if (err) throw err;
             console.log("Employee has been added!");
-            // console.log(res)
             viewEmp();
           });
         });
     });
   });
-};
+}
 
-module.exports =addEmp
+module.exports = addEmp;

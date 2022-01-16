@@ -1,14 +1,12 @@
 const express = require("express");
 const mysql = require("mysql2");
 require("dotenv").config();
-const start = require('./functions/start')
+const start = require("./functions/start");
 const PORT = process.env.PORT || 3001;
 const app = express();
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-
-
 
 const db = mysql.createConnection(
   {

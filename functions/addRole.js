@@ -2,18 +2,13 @@ const mysql = require("mysql2");
 const inquirer = require("inquirer");
 require("dotenv").config();
 const viewRole = require("./viewRole");
-const db = mysql.createConnection(
-  {
-    host: "localhost",
-    // MySQL username,
-    user: process.env.DB_USER,
-    // MySQL password
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-  },
-);
+const db = mysql.createConnection({
+  host: "localhost",
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+});
 function addRole() {
-  // query the department table to get all the info
   const sqlDept = `SELECT * FROM department;`;
   db.query(sqlDept, function (err, data) {
     if (err) throw err;
@@ -51,6 +46,6 @@ function addRole() {
         });
       });
   });
-};
+}
 
-module.exports = addRole
+module.exports = addRole;
