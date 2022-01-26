@@ -9,25 +9,11 @@ const db = mysql.createConnection({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
 });
-function viewDept() {
-  db.query("SELECT * FROM department;", function (err, res) {
+const viewDept = async () => {
+  db.query("SELECT * FROM department;", (err, res) => {
     if (err) throw err;
     console.log(cTable.getTable(res));
-    inquirer
-      .prompt({
-        type: "list",
-        message: "return to menu or exit",
-        choices: ["yes", "exit"],
-        name: "choice",
-      })
-      .then((data) => {
-        switch (data.choice) {
-          case "yes":
-            start();
-            break;
-        }
-      });
   });
-}
+};
 
 module.exports = viewDept;

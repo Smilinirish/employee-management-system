@@ -1,4 +1,4 @@
-const inquirer = require("inquirer");
+var inquirer = require("inquirer");
 const express = require("express");
 const mysql = require("mysql2");
 const cTable = require("console.table");
@@ -9,21 +9,19 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-const db = mysql.createConnection(
-  {
-    host: "localhost",
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-  },
-  start()
-);
+const db = mysql.createConnection({
+  host: "localhost",
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+});
 
 function start() {
   inquirer
     .prompt({
       type: "list",
       message: "Main Menu",
+      name: "choices",
       choices: [
         "Add department",
         "Add employee",
@@ -34,17 +32,46 @@ function start() {
         "View all roles",
         "Exit",
       ],
-      name: "choices",
     })
     .then((data) => {
+      // if ((data.choices == "add employee")) {
+      //   addEmp();
+      //   console.log(data.choices);
+      //   return
+      // };
+      // if ((data.choices = "Add a department")) {
+      //   addDept();
+      //   console.log(data.choices);
+      // };
+      // if ((data.choices = "Add an employee")) {
+      //   addEmp();
+      //   console.log(data.choices);
+      // };
+      // if ((data.choices = "Update an employee role")) {
+      //   updateEmpRole();
+      //   console.log(data.choices);
+      // };
+      // if ((data.choices = "View all departments")) {
+      //   viewDept();
+      //   console.log(data.choices);
+      // };
+      // if ((data.choices = "View all roles")) {
+      //   viewRole();
+      //   console.log(data.choices);
+      // };
+      // if ((data.choices = "View all employees")) {
+      //   viewEmp();
+      //   console.log(data.choices);
+      // };
+
       switch (data.choices) {
-        case "View all departments":
+        case `View all departments`:
           viewDept();
           break;
-        case "View all roles":
+        case `View all roles`:
           viewRole();
           break;
-        case "View all employees":
+        case `View all employees`:
           viewEmp();
           break;
         case "Add a department":
@@ -63,7 +90,7 @@ function start() {
     });
 }
 
-function addDept() {
+const addDept = () => {
   inquirer
     .prompt([
       {
@@ -73,15 +100,15 @@ function addDept() {
       },
     ])
     .then(function (answer) {
-      const depName = answer.name;
+      const newName = answer.name;
       const sql = `INSERT INTO department (name) VALUES(?);`;
-      db.query(sql, depName, function (err, res) {
+      db.query(sql, newName, function (err, res) {
         if (err) throw err;
         console.log(cTable.getTable(res));
         viewDept();
       });
     });
-}
+};
 
 function addEmp() {
   const roleSql = `SELECT role.id, role.title FROM role`;
@@ -96,8 +123,6 @@ function addEmp() {
         name: first_name + " " + last_name,
         value: id,
       }));
-      console.log(manager);
-
       inquirer
         .prompt([
           {
@@ -143,7 +168,7 @@ function addEmp() {
 
 function addRole() {
   const sqlDept = `SELECT * FROM department;`;
-  db.query(sqlDept, function (err, data) {
+  db.query(sqlDept, (err, data) => {
     if (err) throw err;
     let newData = data.map(({ name, id }) => ({ name: name, value: id }));
     inquirer
@@ -165,7 +190,7 @@ function addRole() {
           name: "deptName",
         },
       ])
-      .then(function (response) {
+      .then((response) => {
         const role = response.roleName;
         const salary = response.salary;
         const dept = response.deptName;
@@ -181,7 +206,7 @@ function addRole() {
   });
 }
 
-function updateEmpRole() {
+const updateEmpRole = async () => {
   const empSql = `SELECT * From employee`;
   db.query(empSql, (err, res) => {
     if (err) throw err;
@@ -199,7 +224,7 @@ function updateEmpRole() {
           choices: empUpdate,
         },
       ])
-      .then(function (response) {
+      .then((response) => {
         const empName = response.name;
         const roleSql = `SELECT * FROM role`;
         db.query(roleSql, (err, res) => {
@@ -217,7 +242,7 @@ function updateEmpRole() {
                 choices: roleUpdate,
               },
             ])
-            .then(function (response1) {
+            .then((response1) => {
               const empRole = response1.role;
               const parameter = [empRole, empName];
               console.log(parameter);
@@ -233,10 +258,10 @@ function updateEmpRole() {
         });
       });
   });
-}
+};
 
 function viewDept() {
-  db.query("SELECT * FROM department;", function (err, res) {
+  db.query("SELECT * FROM department;", (err, res) => {
     if (err) throw err;
     console.log(cTable.getTable(res));
     inquirer
@@ -314,3 +339,5 @@ function viewRole() {
     }
   );
 }
+
+start();

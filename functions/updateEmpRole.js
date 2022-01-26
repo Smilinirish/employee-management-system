@@ -8,7 +8,7 @@ const db = mysql.createConnection({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
 });
-function updateEmpRole() {
+const updateEmpRole = async () => {
   const empSql = `SELECT * From employee`;
   db.query(empSql, (err, res) => {
     if (err) throw err;
@@ -25,7 +25,7 @@ function updateEmpRole() {
           choices: empUpdate,
         },
       ])
-      .then(function (response) {
+      .then((response) => {
         const empName = response.name;
         const roleSql = `SELECT * FROM role`;
         db.query(roleSql, (err, res) => {
@@ -43,7 +43,7 @@ function updateEmpRole() {
                 choices: roleUpdate,
               },
             ])
-            .then(function (response1) {
+            .then((response1) => {
               const empRole = response1.role;
               const parameter = [empRole, empName];
               console.log(parameter);
@@ -57,6 +57,6 @@ function updateEmpRole() {
         });
       });
   });
-}
+};
 
 module.exports = updateEmpRole;

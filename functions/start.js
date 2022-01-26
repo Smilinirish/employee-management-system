@@ -8,7 +8,7 @@ const updateEmpRole = require("./updateEmpRole");
 const inquirer = require("inquirer");
 require("dotenv").config();
 
-function start() {
+const start = () => {
   inquirer
     .prompt({
       type: "list",
@@ -28,28 +28,30 @@ function start() {
     .then((data) => {
       switch (data.choices) {
         case "View all departments":
-          viewDept();
+          viewDept().then(() => start());
           break;
         case "View all roles":
-          viewRole();
+          viewRole().then(() => start());
           break;
         case "View all employees":
-          viewEmp();
+          viewEmp().then(() => start());
           break;
         case "Add a department":
-          addDept();
+          addDept().then(() => start());
           break;
         case "Add a role":
-          addRole();
+          addRole().then(() => start());
           break;
         case "Add an employee":
-          addEmp();
+          addEmp().then(() => start());
           break;
         case "Update an employee role":
-          updateEmpRole();
+          updateEmpRole().then(() => start());
           break;
       }
     });
-}
+};
+
+start();
 
 module.exports = start;
