@@ -9,10 +9,11 @@ const db = mysql.createConnection({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
 });
-const viewDept = async () => {
+const viewDept = () => {
   db.query("SELECT * FROM department;", (err, res) => {
     if (err) throw err;
     console.log(cTable.getTable(res));
+    start()
   });
 };
 
